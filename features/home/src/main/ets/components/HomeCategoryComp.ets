@@ -1,8 +1,9 @@
-import { HcSkeleton, HcSkeletonItem, httpInstant } from '@cc_interview/basic';
+import { HcSkeleton, HcSkeletonItem, httpInstant, LOGIN_EVENT } from '@cc_interview/basic';
 import { SortType } from '../models/QuestionItemModel';
 import { QuestionType } from '../models/QuestionTypeModel';
 import { FilterButton } from './FilterButton';
 import { QuestionListComp } from './QuestionListComp';
+import { emitter } from '@kit.BasicServicesKit';
 
 @Extend(Text)
 function textTitle() {
@@ -29,6 +30,10 @@ export struct HomeCategoryComp {
 
   aboutToAppear(): void {
     this.getQuestionTypeList()
+    // 触发 LOGIN_EVENT 更新数据
+    emitter.on(LOGIN_EVENT, () => {
+      this.getQuestionTypeList()
+    })
   }
 
   async getQuestionTypeList () {

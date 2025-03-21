@@ -1,14 +1,35 @@
 /**
  * Http 请求工具，基于 axios 封装
  */
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from '@ohos/axios'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from '@ohos/axios'
+import { authStore, HdUser } from './auth';
 import { logger } from './logger'
+import { promptAction, router } from '@kit.ArkUI';
 
 export const baseURL = 'https://api-harmony-teach.itheima.net/hm/'
 
 const instance = axios.create({
   baseURL,
   timeout: 100000
+})
+
+// 请求拦截器
+instance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const user = authStore.getUser()
+  if (user.token) {
+    config.headers.Authorization = `Bearer ${user.token}`
+  }
+  return config
+}, (err: AxiosError) => {
+  logger.error('Req Error 2', JSON.stringify(err))
+  if (err.response?.status === 401) {
+    authStore.setUser({} as HdUser )
+    router.pushUrl({
+      url: 'pages/LoginPage'
+    }, router.RouterMode.Single)
+    promptAction.showToast({ message: '登录失效' })
+  }
+  return Promise.reject(err)
 })
 
 // 响应拦截器

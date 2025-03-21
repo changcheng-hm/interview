@@ -45,6 +45,10 @@ class AuthStore {
     return AppStorage.get<HdUser>('user') || {} as HdUser
   }
 
+  /**
+   * 鉴权方法
+   * @param options 是路由跳转参数 或 是一个回调函数
+   */
   checkAuth(options: router.RouterOptions | Function) {
     if (this.getUser().token) {
       if (typeof options === 'function') {
