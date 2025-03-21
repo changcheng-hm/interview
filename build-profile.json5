@@ -26,8 +26,8 @@
   },
   "modules": [
     {
-      "name": "entry",
-      "srcPath": "./entry",
+      "name": "phone",
+      "srcPath": "./products/phone",
       "targets": [
         {
           "name": "default",
@@ -36,6 +36,26 @@
           ]
         }
       ]
+    },
+    {
+      "name": "basic",
+      "srcPath": "./common/basic",
+    },
+    {
+      "name": "home",
+      "srcPath": "./features/home",
+    },
+    {
+      "name": "project",
+      "srcPath": "./features/project",
+    },
+    {
+      "name": "mine",
+      "srcPath": "./features/mine",
+    },
+    {
+      "name": "ininterview",
+      "srcPath": "./features/ininterview",
     }
   ]
 }

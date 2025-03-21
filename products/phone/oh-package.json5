@@ -1,0 +1,16 @@
+{
+  "name": "phone",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "",
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "@cc_interview/basic": "file:../../common/basic",
+    "@cc_interview/home": "file:../../features/home",
+    "@cc_interview/interview": "file:../../features/ininterview",
+    "@cc_interview/mine": "file:../../features/mine",
+    "@cc_interview/project": "file:../../features/project"
+  }
+}
+
