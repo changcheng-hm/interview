@@ -75,9 +75,12 @@ struct QuestionPage {
     if (params) {
       this.item = params.item as QuestionDetail
       this.list = params.list as QuestionDetail[]
-      this.questionIndex = this.list.findIndex(item => item.id === this.item.id)
-      this.item = await this.getQuestionDetail(this.item.id)
-      this.list[this.questionIndex] = this.item
+      // 如果 item 不是完整数据才加载
+      if (!this.item.answer) {
+        this.questionIndex = this.list.findIndex(item => item.id === this.item.id)
+        this.item = await this.getQuestionDetail(this.item.id)
+        this.list[this.questionIndex] = this.item
+      }
       this.controller.loadUrl($rawfile('question.html'))
     }
   }

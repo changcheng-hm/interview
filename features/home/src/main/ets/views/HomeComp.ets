@@ -1,10 +1,33 @@
-import { HcClockIn, HcSearchBox } from '@cc_interview/basic';
+import { authStore, HcClockIn, HcSearchBox, httpInstant } from '@cc_interview/basic';
 import { HomeCategoryComp } from '../components/HomeCategoryComp';
+import { scanBarcode } from '@kit.ScanKit';
+import { QuestionDetail } from '../models/QuestionItemModel';
+import { promptAction, router } from '@kit.ArkUI';
 
 @Component
 export struct HomeComp {
   @StorageProp('topHeight')
   topHeight: number = 0
+
+  async scanQuestionCode() {
+    if (canIUse('SystemCapability.Multimedia.Scan.ScanBarcode')) {
+      const result = await scanBarcode.startScanForResult(getContext(this))
+      if (result.originalValue) {
+        try {
+          const item = await httpInstant.request<QuestionDetail>({ url: `question/${result.originalValue}` })
+          router.pushUrl({
+            url: 'pages/QuestionPage',
+            params: {
+              item,
+              list: [item]
+            }
+          })
+        } catch (e) {
+          promptAction.showToast({ message: '没有找到试题' })
+        }
+      }
+    }
+  }
 
   build() {
     Column() {
@@ -12,6 +35,11 @@ export struct HomeComp {
         Image($r('app.media.ic_home_scan'))
           .width(24)
           .aspectRatio(1)
+          .onClick(() => {
+            authStore.checkAuth(() => {
+              this.scanQuestionCode()
+            })
+          })
         // 搜索组件
         HcSearchBox({
           layoutWeightValue: 1
