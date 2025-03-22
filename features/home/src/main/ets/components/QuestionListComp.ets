@@ -1,7 +1,7 @@
-import { PageData, QuestionItem, QuestionListParams, SortType } from '../models/QuestionItemModel';
+import { PageData, QuestionItem, QuestionListParams, QuestionPageParams, SortType } from '../models/QuestionItemModel';
 import { QuestionItemComp } from './QuestionItemComp';
 import { promptAction } from '@kit.ArkUI';
-import { httpInstant } from '@cc_interview/basic';
+import { authStore, httpInstant } from '@cc_interview/basic';
 
 @Component
 export struct QuestionListComp {
@@ -96,6 +96,15 @@ export struct QuestionListComp {
           ListItem() {
             QuestionItemComp({
               item: item
+            })
+            .onClick(() => {
+              authStore.checkAuth({
+                url: 'pages/QuestionPage',
+                params: {
+                  item,
+                  list: this.list
+                } as QuestionPageParams
+              })
             })
           }
         })

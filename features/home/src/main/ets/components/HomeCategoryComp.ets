@@ -1,9 +1,10 @@
-import { HcSkeleton, HcSkeletonItem, httpInstant, LOGIN_EVENT } from '@cc_interview/basic';
+import { HcSkeleton, HcSkeletonItem, httpInstant, logger, LOGIN_EVENT } from '@cc_interview/basic';
 import { SortType } from '../models/QuestionItemModel';
 import { QuestionType } from '../models/QuestionTypeModel';
 import { FilterButton } from './FilterButton';
 import { QuestionListComp } from './QuestionListComp';
 import { emitter } from '@kit.BasicServicesKit';
+import { AxiosError } from '@ohos/axios';
 
 @Extend(Text)
 function textTitle() {
@@ -38,9 +39,13 @@ export struct HomeCategoryComp {
 
   async getQuestionTypeList () {
     this.loading = true
-    const res = await httpInstant.request<QuestionType[]>({ url: 'question/type' })
-    this.questionTypeList = res
-    this.loading = false
+    try {
+      const res = await httpInstant.request<QuestionType[], null>({ url: 'question/type' })
+      this.questionTypeList = res
+      this.loading = false
+    } catch (err) {
+      logger.error((err as AxiosError).message)
+    }
   }
 
   @Builder
@@ -198,7 +203,6 @@ export struct HomeCategoryComp {
         Tabs({ index: this.activeIndex }) {
           ForEach(this.questionTypeList, (item: QuestionType, i) => {
             TabContent() {
-              // TODO 试题列表
               QuestionListComp({
                 typeId: item.id,
                 sort: this.sort,

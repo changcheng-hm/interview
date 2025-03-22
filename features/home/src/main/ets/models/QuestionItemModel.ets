@@ -30,6 +30,11 @@ export interface QuestionListParams {
   pageSize?: number
 }
 
+export interface QuestionPageParams {
+  item: QuestionItem
+  list: QuestionItem[]
+}
+
 export class QuestionItemModel implements QuestionItem {
   id: string = ''
   stem: string = ''
