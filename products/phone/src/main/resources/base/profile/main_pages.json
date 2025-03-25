@@ -4,6 +4,13 @@
     "pages/Index",
     "pages/LoginPage",
     "pages/WebPage",
-    "pages/QuestionPage"
+    "pages/QuestionPage",
+    "pages/SearchPage",
+    "pages/ClockInPage",
+    "pages/StudyTimePage",
+    "pages/WordPage",
+    "pages/AudioPage",
+    "pages/SettingsPage",
+    "pages/ProfilePage"
   ]
 }

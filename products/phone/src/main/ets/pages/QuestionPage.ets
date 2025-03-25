@@ -1,4 +1,4 @@
-import { HcLoadingDialog, HcNavBar, HcTag, httpInstant, QuestionOptParams } from '@cc_interview/basic';
+import { HcLoadingDialog, HcNavBar, HcTag, httpInstant, QuestionOptParams, tracking } from '@cc_interview/basic';
 import { QuestionDetail, QuestionPageParams, QuestionShareDialog } from '@cc_interview/home';
 import { promptAction, router } from '@kit.ArkUI';
 import { webview } from '@kit.ArkWeb';
@@ -13,6 +13,17 @@ struct QuestionPage {
   @State questionIndex: number = 0
 
   controller = new webview.WebviewController()
+
+  startTime: number = Date.now()
+
+  onPageShow(): void {
+    this.startTime = Date.now()
+  }
+
+  onPageHide(): void {
+    tracking.record(this.startTime, Date.now(), this.item.id)
+    tracking.report()
+  }
 
   dialog = new CustomDialogController({
     builder: HcLoadingDialog(),
@@ -57,6 +68,10 @@ struct QuestionPage {
     if (index < 0 || index >= this.list.length) {
       return promptAction.showToast({ message: '没有更多题了' })
     }
+    // 记录学习时间
+    tracking.record(this.startTime, Date.now(), this.item.id)
+    this.startTime = Date.now()
+
     this.questionIndex = index
     const item= this.list[index]
     // 加载试题，如果数组中已经是完整数据，直接使用，否则加载

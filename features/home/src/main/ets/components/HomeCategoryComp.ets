@@ -29,6 +29,9 @@ export struct HomeCategoryComp {
 
   @State loading: boolean = false
 
+  @StorageProp('isDark')
+  isDark: boolean = false
+
   aboutToAppear(): void {
     this.getQuestionTypeList()
     // 触发 LOGIN_EVENT 更新数据
@@ -229,7 +232,10 @@ export struct HomeCategoryComp {
         .width(56)
         .height(44)
         .justifyContent(FlexAlign.Center)
-        .linearGradient({ angle: 90, colors: [['#00FFFFFF', 0], ['#FFFFFF', 0.285]] })
+        .linearGradient({ angle: 90, colors: [
+          [this.isDark ? '#00131313' : '#00FFFFFF', 0],
+          [this.isDark ? '#131313' : '#FFFFFF', 0.285]
+        ] })
         .bindSheet($$this.isShow, this.FilterSheetBuilder(), {
           showClose: false,
           height: 400

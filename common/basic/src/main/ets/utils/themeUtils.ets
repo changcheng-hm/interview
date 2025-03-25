@@ -1,32 +1,45 @@
 import { promptAction, window } from '@kit.ArkUI';
 import { logger } from './logger';
-import { ConfigurationConstant } from '@kit.AbilityKit';
+import { common, ConfigurationConstant } from '@kit.AbilityKit';
+
+export const ColorModeKey = 'hc-color-mode'
 
 class ThemeUtils {
 
   private windowStage?: window.Window
 
   initThemeSetting() {
-    const app = this.getCustomContext().getApplicationContext()
-    app.on('environment', {
-      onConfigurationUpdated:(config) => {
-        logger.info('===', JSON.stringify(config))
-        if(config.colorMode === ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT) {
-          this.setStatusBarDark()
-        } else if(config.colorMode === ConfigurationConstant.ColorMode.COLOR_MODE_DARK) {
-          this.setStatusBarLight()
-        }
-      },
-      onMemoryLevel: (level) => {
+    // 持久化颜色主题，默认值亮色模式
+    PersistentStorage.persistProp<ConfigurationConstant.ColorMode>(ColorModeKey,
+      ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT)
+    // 取出现在应用存储的颜色主题模式
+    const colorMode = AppStorage.get<ConfigurationConstant.ColorMode>(ColorModeKey)
+    // 设置应用颜色主题模式
+    this.setTheme(colorMode!)
+  }
 
-      }
-    })
+  setTheme(mode: ConfigurationConstant.ColorMode) {
+    AppStorage.set<ConfigurationConstant.ColorMode>(ColorModeKey, mode)
+    const ctx = AppStorage.get<Context>('context')
+    ctx?.getApplicationContext().setColorMode(mode)
 
-    // 获取应用当前主题
-    // PersistentStorage.persistProp<ConfigurationConstant.ColorMode>('appColorMode',
-    //   ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT)
-    // const appColorMode = AppStorage.get<ConfigurationConstant.ColorMode>('appColorMode')
-    // app.setColorMode(appColorMode)
+    const isDark = (ctx as common.UIAbilityContext).config.colorMode == ConfigurationConstant.ColorMode.COLOR_MODE_DARK
+    AppStorage.setOrCreate('isDark', isDark)
+  }
+
+  // 跟随系统
+  notSet() {
+    this.setTheme(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET)
+  }
+
+  // 暗色
+  setDark() {
+    this.setTheme(ConfigurationConstant.ColorMode.COLOR_MODE_DARK)
+  }
+
+  // 亮色
+  setLight() {
+    this.setTheme(ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT)
   }
 
   async getWindowStage() {

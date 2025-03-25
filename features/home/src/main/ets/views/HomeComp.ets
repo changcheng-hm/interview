@@ -1,4 +1,4 @@
-import { authStore, HcClockIn, HcSearchBox, httpInstant } from '@cc_interview/basic';
+import { authStore, HcClockIn, HcSearchBox, HdUser, httpInstant, requestClockIn, tracking } from '@cc_interview/basic';
 import { HomeCategoryComp } from '../components/HomeCategoryComp';
 import { scanBarcode } from '@kit.ScanKit';
 import { QuestionDetail } from '../models/QuestionItemModel';
@@ -8,6 +8,8 @@ import { promptAction, router } from '@kit.ArkUI';
 export struct HomeComp {
   @StorageProp('topHeight')
   topHeight: number = 0
+
+  @StorageProp('user') user: HdUser = {} as HdUser
 
   async scanQuestionCode() {
     if (canIUse('SystemCapability.Multimedia.Scan.ScanBarcode')) {
@@ -29,6 +31,10 @@ export struct HomeComp {
     }
   }
 
+  aboutToAppear(): void {
+    tracking.report(true)
+  }
+
   build() {
     Column() {
       Row({ space: 16 }) {
@@ -42,11 +48,17 @@ export struct HomeComp {
           })
         // 搜索组件
         HcSearchBox({
-          layoutWeightValue: 1
+          layoutWeightValue: 1,
+          onSearchClick: () => {
+            router.pushUrl({
+              url: 'pages/SearchPage'
+            })
+          }
         })
-        HcClockIn({
-          clockInCount: 2
-        })
+        HcClockIn({ clockInCount: this.user.clockinNumbers })
+          .onClick(() => {
+            requestClockIn()
+          })
       }.padding({left: 16, right: 16})
       .height(64)
       .width('100%')

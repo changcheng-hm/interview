@@ -7,6 +7,8 @@ export struct HcSearchBox {
   @Prop bgColor: ResourceColor = $r('app.color.common_gray_border')
   @Prop layoutWeightValue: number = 0
 
+  onSearchClick: Function = () => {}
+
   build() {
     Row({ space: 4 }){
       Image($r('app.media.ic_common_search'))
@@ -23,5 +25,8 @@ export struct HcSearchBox {
     .borderRadius(this.boxHeight / 2)
     .justifyContent(FlexAlign.Center)
     .layoutWeight(this.layoutWeightValue)
+    .onClick(() => {
+      this.onSearchClick()
+    })
   }
 }

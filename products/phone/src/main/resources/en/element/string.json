@@ -11,6 +11,10 @@
     {
       "name": "EntryAbility_label",
       "value": "pass_interview"
+    },
+    {
+      "name": "reason_microphone",
+      "value": "interview_record"
     }
   ]
 }

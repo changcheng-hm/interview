@@ -21,6 +21,8 @@ export struct QuestionListComp {
 
   @State page: number = 1
 
+  @Prop keyword: string = ''
+
   @Builder
   LoadMoreBuilder() {
     ListItem() {
@@ -55,6 +57,7 @@ export struct QuestionListComp {
       url: 'question/list',
       params: {
         type: this.typeId,
+        keyword: this.keyword,
         questionBankType: 10,
         sort: this.sort,
         page: this.page,

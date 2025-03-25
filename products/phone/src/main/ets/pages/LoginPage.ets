@@ -1,4 +1,4 @@
-import { authStore, HcNavBar, HdUser, httpInstant, LOGIN_EVENT } from '@cc_interview/basic';
+import { authStore, HcNavBar, HdUser, httpInstant, LOGIN_EVENT, tracking } from '@cc_interview/basic';
 import { promptAction, router } from '@kit.ArkUI';
 import { emitter } from '@kit.BasicServicesKit';
 
@@ -47,6 +47,7 @@ struct LoginPage {
       this.loading = false
       authStore.setUser(user)
       emitter.emit(LOGIN_EVENT)
+      tracking.report(true)
       // 有 return_url 就回跳
       const params = router.getParams() as Record<string, string> || {}
       if (params?.return_url) {

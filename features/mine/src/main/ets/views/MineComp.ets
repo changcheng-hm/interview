@@ -1,4 +1,4 @@
-import { formatTime, HcClockIn, HdUser } from '@cc_interview/basic';
+import { authStore, formatTime, HcClockIn, HdUser, requestClockIn } from '@cc_interview/basic';
 import { router } from '@kit.ArkUI'
 
 interface Nav {
@@ -121,6 +121,9 @@ export struct MineComp {
         }
 
         HcClockIn({ clockInCount: this.user.clockinNumbers })
+          .onClick(() => {
+            requestClockIn()
+          })
       }
       .width('100%')
       .height(100)
@@ -147,7 +150,9 @@ export struct MineComp {
           name: '累计学时',
           other: formatTime(this.user.totalTime),
           onClick: () => {
-            // TODO
+            router.pushUrl({
+              url: "pages/StudyTimePage"
+            })
           }
         })
       }
@@ -158,16 +163,29 @@ export struct MineComp {
       Column() {
         this.toolsBuilder({
           icon: $r('app.media.ic_mine_notes'), name: '开发常用词', onClick: () => {
-            // TODO
+            router.pushUrl({
+              url: "pages/WordPage"
+            })
           }
         })
-        this.toolsBuilder({ icon: $r('app.media.ic_mine_ai'), name: '面通AI' })
+        this.toolsBuilder({ icon: $r('app.media.ic_mine_ai'), name: '面通AI', onClick: () => {
+            authStore.checkAuth(() => {
+              router.pushUrl({
+                url: "pages/AudioPage"
+              })
+            })
+          }
+        })
         this.toolsBuilder({ icon: $r('app.media.ic_mine_invite'), name: '推荐分享' })
         this.toolsBuilder({ icon: $r('app.media.ic_mine_file'), name: '意见反馈' })
         this.toolsBuilder({ icon: $r('app.media.ic_mine_info'), name: '关于我们' })
         this.toolsBuilder({
           icon: $r('app.media.ic_mine_setting'), name: '设置', onClick: () => {
-            // TODO
+            authStore.checkAuth(() => {
+              router.pushUrl({
+                url: "pages/SettingsPage"
+              })
+            })
           }
         })
       }

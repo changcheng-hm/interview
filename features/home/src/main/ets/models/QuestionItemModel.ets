@@ -28,6 +28,7 @@ export interface QuestionListParams {
   sort?: SortType
   page?: number
   pageSize?: number
+  keyword?: string
 }
 
 export interface QuestionPageParams {
